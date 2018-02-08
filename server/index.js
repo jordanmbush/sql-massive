@@ -10,8 +10,21 @@ massive(process.env.CONNECTION_STRING).then( dbInstance => {
     app.set('db', dbInstance);
 });
 
+function errorHandler(error) {
+
+}
+
 app.get('/api/heroes', (req, res) => {
     req.app.get('db').get_heroes().then( heroes => {
+        res.status(200).send(heroes);
+    }).catch(error => {
+        console.log('API Error!', error);
+        res.status(500).json({message: 'An error happend'})
+    })
+})
+
+app.get('/api/awesome_heroes', (req, res) => {
+    req.app.get('db').get_awesome_heroes([req.query.powers, req.query.age]).then( heroes => {
         res.status(200).send(heroes);
     }).catch(error => {
         console.log('API Error!', error);
